@@ -1,0 +1,60 @@
+
+<project name="testlibs" default="go" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <!-- 
+        this build file is a self contained project: it doesn't require anything else 
+        that ant 1.6.2 or greater and java 1.4 or greater properly installed.
+     
+        it will retreive compiletime and runtime dependencies for geb - spock etc etc 
+        to a lib directory using ivy.
+        
+        THIS IS A HELPER, the jars used are manually checked in and this needs to be run manually
+        -->
+    
+    <target name="install-ivy">
+        <property name="ivy.jar.dir" value="${basedir}/tmp/" />
+        <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+        <property name="ivy.version" value="2.2.0" />
+        <property name="ivy.repo" value="http://repo1.maven.org/maven2/" />
+        <mkdir dir="${ivy.jar.dir}"/>
+        <get src="${ivy.repo}/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"
+             dest="${ivy.jar.file}" usetimestamp="true"/>
+        <path id="ivy.lib.path">
+            <pathelement location="${ivy.jar.file}"/>
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+     </target>    
+    
+    <target name="go" depends="install-ivy" description="generate dependencies into lib/">
+        <echo message="** updating lib (delete first to ensure synced!) with compiletime deps to allow writing tests with junit-geb-spock. **"/>
+        <echo message="** updating runtimelib (delete first to ensure synced!) with runtime deps to allow running tests with junit-geb-spock. **"/>
+
+        <ivy:retrieve organisation="org.spockframework" module="spock-core" revision="0.5-groovy-1.7" 
+            pattern="lib/[artifact]-[revision].[ext]" conf="master,compile"
+            type="jar" inline="true" keep="true" />
+        <ivy:retrieve organisation="org.spockframework" module="spock-core" revision="0.5-groovy-1.7" 
+            pattern="runtimelib/[artifact]-[revision].[ext]" conf="provided,runtime,optional,system"
+            type="jar" inline="true" keep="true" />
+
+        <ivy:retrieve organisation="org.codehaus.geb" module="geb-junit4" revision="0.5.1" 
+            pattern="lib/[artifact]-[revision].[ext]" conf="master,compile"
+            type="jar" inline="true" keep="true" /> 
+        <ivy:retrieve organisation="org.codehaus.geb" module="geb-junit4" revision="0.5.1" 
+            pattern="runtimelib/[artifact]-[revision].[ext]" conf="provided,runtime,optional,system"
+            type="jar" inline="true" keep="true" /> 
+            
+        <ivy:retrieve organisation="org.codehaus.geb" module="geb-spock" revision="0.5.1" 
+            pattern="lib/[artifact]-[revision].[ext]" conf="master,compile"
+            type="jar" inline="true" keep="true" /> <!-- fix -->
+        <ivy:retrieve organisation="org.codehaus.geb" module="geb-spock" revision="0.5.1" 
+            pattern="runtimelib/[artifact]-[revision].[ext]" conf="provided,runtime,optional,system"
+            type="jar" inline="true" keep="true" /> 
+
+        <ivy:retrieve organisation="org.seleniumhq.selenium" module="selenium-htmlunit-driver" revision="2.0b2" 
+            pattern="runtimelib/[artifact]-[revision].[ext]" conf="master,compile,provided,runtime,optional,system"
+            type="jar" inline="true" keep="true" /> <!-- fix -->
+
+        <echo message="** contents of lib and runtimelib now updated. **"/>
+        <echo message="** NEEDS MANUAL TUNING to avoid overlaps with play libs, runtimelibs vs libs etc **"/>
+    </target>
+</project>
+

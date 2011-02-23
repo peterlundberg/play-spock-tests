@@ -1,0 +1,49 @@
+
+h1. Spocktests module
+
+2011-02-20 Peter Lundberg
+
+h2. Introduction
+
+This module allows running "Spock":http://www.spockframework.org specifications. This provides the possibility to write BDD wrapped junit tests with the expressive power of groovy and still have the tested application be in playframework. This can also be combined with "Geb":http://geb.codehaus.org/ which provides "The future of functional web testing":http://blog.springsource.com/2010/08/28/the-future-of-functional-web-testing/.
+
+This has been achieved using a compile-run processes separate from playframeworks "test":http://www.playframework.org/documentation/1.1.1/test approach. Play! tests are run in the target server processes and does not support Groovy code and the compiler plugin 
+support that Spock needs. Similar roundtrip times can be achieved though as the system under test is run under play! as usual and only the
+test code is compiled more traditionally per run and there is no deployment etc.
+
+* Spocktests vs junit - the BDD approach, tersness, mocking and error feedback of Spock needs to be tried and is better.
+* Spocktests vs functional - the approach via Geb requires server roundtrip but supports cookies and can handle authentication. Geb also supplies more that helps writing maintainable tests such as page objects. ?The controller methods can be tested as a class if needed?
+* Spocktests vs selenium - Spock + Geb provided a higher level approach on top of WebDriver's that is a new API from Selenium. So tests can express any logic and structure the developer needs. Geb's selectors and page abstractions make for much more maintainable test code.
+
+h2. Usage
+
+The module needs to be added to conf/application.conf, then simply run.
+
+bc. $ play test &
+$ play spocktests:run
+
+Which will execute all *Specifications* found under the applications *test* folder using Junit. These will have been compiled by the groovyc compiler with the applications classpath and precompiled source on the classpath. This is currently via a embedded apache ant script to re-use existing components. Output is to the screen and the results of the tests are in *tmp/spocktests/reports* and if a failure occurs a file *tmp/spocktests/test.failure* exists to ease integration with continuous integration tools.
+
+Alternatively one can select only a few specs by providing a filter for the name of the Spec class. This is done with the following option (which simply defaults to '*'):
+    
+bc. $ play spocktests:run --specfilter=User*Spec
+    
+As the build processes re-uses compiled files, occasionally derived data becomes out of sync with reality. Then this can be reset using:
+
+bc. $ play spocktests:clean
+
+Note that only the HtmlDriver is bundled in the module. To use another "WebDriver":http://seleniumhq.org/docs/03_webdriver.html#webdriver-implementations the appropriate jar needs to be in the applications library path.
+    
+How to write the specifications is covered in more detail under:
+* http://code.google.com/p/spock/wiki/SpockBasics.
+* http://geb.codehaus.org/manual/latest/integrations.html#gebspockgebspec
+* http://blog.springsource.com/2010/08/28/the-future-of-functional-web-testing/
+* ...
+
+h3. Roadmap
+
+Great kudos to the authors of playframewok, geb and spock. 
+Hopefully further integration och ease-of-use can be seen.
+Feedback
+
+

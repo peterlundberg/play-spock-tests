@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="spocktests" default="assert-specs" basedir=".">
+
+  <path id="test.classpath">        
+        <fileset dir="runtimelib"> 
+            <include name="*.jar"/>
+        </fileset>
+      	<!-- Note: Above overrides some libs in play -->
+      	<pathelement path="${app.classpath}"/>    
+  </path>
+  
+  <property name="testclasses" value="${app.path}/tmp/${ant.project.name}/classes/"/>
+  <property name="failfile" value="${app.path}/tmp/${ant.project.name}/result.failed"/>
+    
+  <target name="compile">
+    <echo message="This script assumes play has compiled files to tmp and precompiled." />
+  </target>
+
+  <target name="compile-tests" depends="compile">
+    <echo message="Compiling tests" />
+
+    <!-- Allow mixing groovy and java test classes. See also http://groovy.codehaus.org/The+groovyc+Ant+Task -->
+    <taskdef
+        name="groovyc"
+        classname="org.codehaus.groovy.ant.Groovyc"
+        classpathref="test.classpath"/>  
+    
+    <mkdir dir="${testclasses}" />
+    
+    <!-- TODO: provide app root -->
+    <groovyc
+         srcdir="${app.path}/test/"
+         destdir="${testclasses}"
+         encoding="utf8"
+         listfiles="no"
+        >
+        <classpath refid="test.classpath" />
+
+        <!-- nested javac enables any tricky java<->groovy dependencies to be solved
+             this will handle all *java files in test.
+         -->
+        <javac
+               debug="on"
+               encoding="utf8"
+               target="1.6">
+           <compilerarg value="-Xlint" />
+           <classpath refid="test.classpath" />
+
+         </javac>
+    </groovyc>
+    
+  </target>
+    
+  <target name="assert-specs"
+          depends="compile-tests"
+          description="Run unit tests">
+    <property name="junitreport.dir" value="${app.path}/tmp/${ant.project.name}/junit-reports/" />
+    <delete dir="${junitreport.dir}" />
+    <mkdir dir="${junitreport.dir}" />
+
+    <echo message="Runnning Spec classes matching ${spec.filter}" />
+    <echo message="last build failed tests" file="${failfile}"/>
+
+    <junit printsummary="no" 
+    	showoutput="no" 
+    	haltonfailure="no" 
+    	failureproperty="has.failed.tests"
+    	errorproperty="has.failed.tests">
+      <formatter type="plain" usefile="no" />
+      <formatter type="xml" />
+	  <classpath>
+	    <path refid="test.classpath"/>
+		<pathelement location="${testclasses}"/>
+	  </classpath>
+      <batchtest todir="${junitreport.dir}">
+        <fileset dir="${testclasses}">
+                <include name="**/${spec.filter}.class"/>
+
+        <custom classname="org.spockframework.buildsupport.ant.SpecClassFileSelector" 
+        	classpathref="test.classpath"/>
+        	
+        </fileset>
+      </batchtest>
+    </junit>
+    
+     <fail if="has.failed.tests">
+        Some Specifications did not succeed.  Check log or reports for details
+     </fail>
+     <delete file="${failfile}"/>
+  
+  </target>
+
+</project>
