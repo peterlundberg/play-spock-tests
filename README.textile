@@ -19,11 +19,11 @@ The module needs to be added to conf/application.conf, then simply run.
 
 bc. $ play test &
 
-To ensure the application is running, in this case with the 'test' framework id to help configuration and in the background to allow running other commands and get interleaved console output. But the actual spock tests are not dependant on the play server running. If using web tests this also provided the server to run against, as this is normal a warning is issued if the server cannot be found on localhost. Then run:
+To ensure the application is running, in this case with the 'test' framework id to help configuration and in the background to allow running other commands and get interleaved console output. But the actual spock tests are not dependant on the play server running. If using web tests this also provided the server to run against, as this is normal a warning is issued if the server cannot be found on localhost. Then assuming you have some spock tests run:
 
 bc. $ play spocktests:run
 
-Which will execute all spock @"Specifications":http://code.google.com/p/spock/wiki/SpockBasics@ found under the applications @test@ folder using Junit. These will have been compiled by the groovyc compiler with the application's classpath and precompiled source on the classpath. This is currently via a embedded apache ant script to re-use existing components. Output is to the screen and the results of the tests are in @tmp/spocktests/reports@ and if a failure occurs a file @tmp/spocktests/test.failure@ exists to ease integration with continuous integration tools.
+Which will execute all spock "Specifications":http://code.google.com/p/spock/wiki/SpockBasics found under the applications @test@ folder using Junit. These will have been compiled by the groovyc compiler with the application's classpath and precompiled source on the classpath. This is currently via a embedded apache ant script to re-use existing components. Output is to the screen and the results of the tests are in @tmp/spocktests/reports@ and if a failure occurs a file @tmp/spocktests/test.failure@ exists to ease integration with continuous integration tools.
 
 Alternatively one can select only a few specs by providing a filter for the name of the Spec class. This is done with the following option (which simply defaults to '*'):
     
