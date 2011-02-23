@@ -1,41 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="spocktests" default="build" basedir=".">
-
-    <path id="project.classpath">
-        <pathelement path="${play.path}/framework/classes"/>
-        <fileset dir="${play.path}/framework/lib">
-            <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${play.path}/framework">
-            <include name="*.jar"/>
-        </fileset>
-        <fileset dir="lib">
-            <include name="*.jar"/>
-        </fileset>
-    </path>
     
     <tstamp>
     	<format property="buildDate" pattern="yyyy-MM-dd HH:mm:ss"/>
     </tstamp>
 
     <target name="build">
-
-        <copy todir="tmp/classes">
-            <fileset dir="src">
-                <include name="**/*.properties"/>
-                <include name="**/*.xml"/>
-                <include name="**/play.plugins"/>
-                <include name="**/play.static"/>
-            </fileset>
-        </copy>
         
 	    <jar destfile="lib/play-spock-tests.jar">
             <manifest>
                 <attribute name="Specification-Title" value="Kopps"/>
-        		<attribute name="Implementation-Vendor" value="KTH"/>
-        		<attribute name="Implementation-Title" value="${buildDate}"/>
-      			<attribute name="Implementation-Version" value="${kopps.version}"/>
+        		<attribute name="Implementation-Vendor" value="Peter Lundberg"/>
+        		<attribute name="Implementation-Title" value="Built ${buildDate}"/>
                 <section name="Play-module">
                     <attribute name="Specification-Title" value="spocktests"/>
                 </section>
@@ -49,8 +26,7 @@
                 <!-- not packaging refresh_libs.xml as only a dev tool -->
             </fileset>
         </jar>
-        <delete dir="tmp" />
+    	<echo message="remember to remove lib/play-spock-tests.jar that command expects"/>
     </target>
-
-
 </project>
+11
