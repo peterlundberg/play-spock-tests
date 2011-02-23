@@ -23,7 +23,7 @@ To ensure the application is running, in this case with the 'test' framework id 
 
 bc. $ play spocktests:run
 
-Which will execute all spock "Specifications":http://code.google.com/p/spock/wiki/SpockBasics found under the applications *test* folder using Junit. These will have been compiled by the groovyc compiler with the application's classpath and precompiled source on the classpath. This is currently via a embedded apache ant script to re-use existing components. Output is to the screen and the results of the tests are in *tmp/spocktests/reports* and if a failure occurs a file *tmp/spocktests/test.failure* exists to ease integration with continuous integration tools.
+Which will execute all spock @"Specifications":http://code.google.com/p/spock/wiki/SpockBasics@ found under the applications @test@ folder using Junit. These will have been compiled by the groovyc compiler with the application's classpath and precompiled source on the classpath. This is currently via a embedded apache ant script to re-use existing components. Output is to the screen and the results of the tests are in @tmp/spocktests/reports@ and if a failure occurs a file @tmp/spocktests/test.failure@ exists to ease integration with continuous integration tools.
 
 Alternatively one can select only a few specs by providing a filter for the name of the Spec class. This is done with the following option (which simply defaults to '*'):
     
@@ -35,13 +35,16 @@ bc. $ play spocktests:clean
 
 Note that only the HtmlDriver is bundled in the module currently. To use another "WebDriver":http://seleniumhq.org/docs/03_webdriver.html#webdriver-implementations the appropriate jar needs to be in the applications library path.
 
+h3. References
+
 How to write the specifications is covered in more detail under:
-* http://code.google.com/p/spock/wiki/SpockBasics.
-* http://geb.codehaus.org/manual/latest/integrations.html#gebspockgebspec
-* http://blog.springsource.com/2010/08/28/the-future-of-functional-web-testing/
+* "SpockBasics":http://code.google.com/p/spock/wiki/SpockBasics.
+* "GebSpec":http://geb.codehaus.org/manual/latest/integrations.html#gebspockgebspec
+* "Geb Manual":http://geb.codehaus.org/manual/latest/
+* "SpringSource blog entry":http://blog.springsource.com/2010/08/28/the-future-of-functional-web-testing/
 * ...
 
-h3. Roadmap
+h2. Roadmap
 
 Great kudos to the authors of playframework, geb and spock. 
 
