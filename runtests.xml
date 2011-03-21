@@ -72,6 +72,7 @@
 	  <classpath>
 	    <path refid="test.classpath"/>
 		<pathelement location="${testclasses}"/>
+		<pathelement location="${app.path}/test/"/>
 	  </classpath>
       <batchtest todir="${junitreport.dir}">
         <fileset dir="${testclasses}">
